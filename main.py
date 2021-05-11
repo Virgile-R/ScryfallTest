@@ -34,7 +34,7 @@ async def carte(ctx, *cardname):
         image = data['image_uris']['normal']
 
         embed = discord.Embed(title = name, url= url, description = mana_cost)
-        if oracle_text is not NULL:
+        if oracle_text is not None:
            embed.add_field(name= "Texte Oracle", value= oracle_text)
         embed.set_thumbnail(url=image)
 
