@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import os
 import discord
 import json
@@ -33,7 +34,8 @@ async def carte(ctx, *cardname):
         image = data['image_uris']['normal']
 
         embed = discord.Embed(title = name, url= url, description = mana_cost)
-        embed.add_field(name= "Texte Oracle", value= oracle_text)
+        if oracle_text is not NULL:
+           embed.add_field(name= "Texte Oracle", value= oracle_text)
         embed.set_thumbnail(url=image)
 
         await ctx.send (embed=embed)
