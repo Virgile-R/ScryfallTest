@@ -6,12 +6,12 @@ import requests
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix="!")
-token = os.getenv("DISCORD_TOKEN")
+#token = os.getenv("DISCORD_TOKEN")
 #fonction pour loader le token
-#def load_token():
-#    with open("token.txt" , "r") as f:
-#        lines = f.readlines()
-#       return lines[0].strip()
+def load_token():
+    with open("token.txt" , "r") as f:
+        lines = f.readlines()
+        return lines[0].strip()
 
 @bot.event
 async def on_ready():
@@ -34,12 +34,12 @@ async def carte(ctx, *cardname):
         image = data['image_uris']['normal']
 
         embed = discord.Embed(title = name, url= url, description = mana_cost)
-        if oracle_text is not None:
+        if oracle_text:
            embed.add_field(name= "Texte Oracle", value= oracle_text)
         embed.set_thumbnail(url=image)
 
         await ctx.send (embed=embed)
 
-#token = load_token()
+token = load_token()
 if __name__ == "__main__":
     bot.run(token)
