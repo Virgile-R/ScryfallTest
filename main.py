@@ -14,7 +14,7 @@ token = os.getenv("DISCORD_TOKEN")
 
 @bot.event
 async def on_ready():
-    channel = bot.get_channel(811589043686866966)
+    channel = bot.get_channel(840631684961796146)
     await channel.send('ScryFallBot Radis')
 
 @bot.command()
