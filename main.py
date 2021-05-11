@@ -6,6 +6,7 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix="!")
 token = os.getenv("DISCORD_TOKEN")
+channel_id = os.getenv("CHANNEL_ID")
 #fonction pour loader le token
 #def load_token():
 #    with open("token.txt" , "r") as f:
@@ -14,7 +15,7 @@ token = os.getenv("DISCORD_TOKEN")
 
 @bot.event
 async def on_ready():
-    channel = bot.get_channel(840631684961796146)
+    channel = bot.get_channel(channel_id)
     await channel.send('ScryFallBot Radis')
 
 @bot.command()
