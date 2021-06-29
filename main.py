@@ -31,7 +31,7 @@ async def carte(ctx, *cardname):
         name = data['name']             
         mana_cost = data['card_faces'][0]['mana_cost']
         url = data['scryfall_uri']
-        oracle_text = data['card_faces'][0]['oracle_text']
+        oracle_text = data['card_faces'][0]['oracle_text'] + data['card_faces'][1]['oracle_text'] 
         image = data['card_faces'][0]['image_uris']['normal']    
     else:
         name = data['name']             
