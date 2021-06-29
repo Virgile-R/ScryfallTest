@@ -28,7 +28,11 @@ async def carte(ctx, *cardname):
         await ctx.send(f'Une erreur s\'est produite :{details}')
     else:
         name = data['name']
-        mana_cost = data['mana_cost']
+        cardface = data['card_faces']
+        if cardface:
+            mana_cost = data[0]['mana_cost']
+        else:
+            mana_cost = data['mana_cost']
         url = data['scryfall_uri']
         oracle_text = data['oracle_text']
         image = data['image_uris']['normal']
