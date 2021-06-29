@@ -40,12 +40,12 @@ async def carte(ctx, *cardname):
         oracle_text = data['oracle_text']
         image = data['image_uris']['normal']
 
-        embed = discord.Embed(title = name, url= url, description = mana_cost)
-        if oracle_text:
-           embed.add_field(name= "Texte Oracle", value= oracle_text)
-        embed.set_thumbnail(url=image)
+    embed = discord.Embed(title = name, url= url, description = mana_cost)
+    if oracle_text:
+        embed.add_field(name= "Texte Oracle", value= oracle_text)
+    embed.set_thumbnail(url=image)
 
-        await ctx.send (embed=embed)
+    await ctx.send (embed=embed)
 
 #token = load_token()
 if __name__ == "__main__":
