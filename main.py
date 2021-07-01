@@ -51,7 +51,7 @@ async def carte(ctx, *cardname):
 
 @bot.command()
 async def meta(ctx, *format):
-    nomformat = '+'.join(format)
+    nomformat = '+'.join(format).lower()
     url = f'https://www.mtggoldfish.com/metagame/{nomformat}#paper'
 
     page = urllib.request.urlopen(url)
@@ -70,9 +70,9 @@ async def meta(ctx, *format):
     
 
     
-    
+    nomformat = '+'.join(format).capitalize()
     embed = discord.Embed()
-    embed.description = f'La meta du {format} selon [MTGGoldfish]({url})' 
+    embed.description = f'La meta du {nomformat} selon [MTGGoldfish]({url})' 
     await ctx.send (embed=embed)
 
 #token = load_token()
