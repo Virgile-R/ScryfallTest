@@ -91,7 +91,7 @@ async def meta(ctx, *format):
 @bot.command()
 async def chaoscommander(ctx, *args):
     embed = discord.Embed(title= 'CHAOS REIGNS')
-    if args == None:
+    if not args:
        args_commander = random_commander()
        for key, value in args_commander.items():
             embed.add_field(name= 'Commander au hasard', value= f'[{key}]({value})')
