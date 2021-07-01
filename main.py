@@ -73,7 +73,7 @@ async def meta(ctx, *format):
     nomformat = '+'.join(format).capitalize()
     embed = discord.Embed(title= f'La meta du {nomformat} selon MTGGoldfish', url=url )
     for key, value in results.items():
-        embed.add_field(name = key, value=f'[decklist]({value}')
+        embed.add_field(name = key, value=f'[decklist]({value})')
     await ctx.send (embed=embed)
 
 #token = load_token()
