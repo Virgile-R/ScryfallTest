@@ -19,9 +19,13 @@ channel_id = os.getenv("CHANNEL_ID")
 def random_commander():
     apiurl = 'https://api.scryfall.com/cards/search?q=is%3Acommander+legal%3Acommander'
     datacommander = requests.get(apiurl).json()
+    result = dict()
     commander = datacommander["data"]
     random_index = random.randint(0, len(commander)-1)
-    return commander[random_index]['name'], commander[random_index]['related_uris']['edhrec']
+    cmdname = commander[random_index]['name']
+    cmdurl = commander[random_index]['related_uris']['edhrec']
+    result[cmdname] = cmdurl
+    return result
 
 @bot.event
 async def on_ready():
@@ -91,7 +95,8 @@ async def chaoscommander(ctx, *args):
         joueurs = arg
         print(joueurs)
         args_commander = random_commander()
-        embed.add_field(name= joueurs, value= args_commander)
+        for key, value in args_commander:
+            embed.add_field(name= joueurs, value= f'[{key}]({value})')
     await ctx.send (embed=embed)
     await ctx.send ("https://giphy.com/gifs/skdJmptBR4iic")
         
