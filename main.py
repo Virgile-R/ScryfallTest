@@ -95,6 +95,7 @@ async def chaoscommander(ctx, *args):
         joueurs = arg
         print(joueurs)
         args_commander = random_commander()
+        print(args_commander)
         for key, value in args_commander:
             embed.add_field(name= joueurs, value= f'[{key}]({value})')
     await ctx.send (embed=embed)
