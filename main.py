@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import urllib.request
 from discord.ext import commands
+import random
 
 bot = commands.Bot(command_prefix="!")
 token = os.getenv("DISCORD_TOKEN")
@@ -14,6 +15,13 @@ channel_id = os.getenv("CHANNEL_ID")
 #    with open("token.txt" , "r") as f:
 #        lines = f.readlines()
 #        return lines[0].strip()
+
+def random_commander():
+    apiurl = 'https://api.scryfall.com/cards/search?q=is%3Acommander+legal%3Acommander'
+    datacommander = requests.get(apiurl).json()
+    commander = datacommander["data"]
+    random_index = random.randint(0, len(commander)-1)
+    return commander[random_index]['name'], commander[random_index]['related_uris']['edhrec']
 
 @bot.event
 async def on_ready():
@@ -76,6 +84,16 @@ async def meta(ctx, *format):
         embed.add_field(name = key, value=f'[decklist]({value})')
     await ctx.send (embed=embed)
 
+@bot.command()
+async def chaoscommander(ctx, **kwargs):
+    embed = discord.Embed(title= 'CHAOS REIGNS')
+    for args in kwargs.items():
+        args_commander = random_commander()
+        embed.add_field(name= args, value= args_commander)
+    await ctx.send (embed=embed)
+    await ctx.send ("https://giphy.com/gifs/skdJmptBR4iic")
+        
 #token = load_token()
+
 if __name__ == "__main__":
     bot.run(token)
