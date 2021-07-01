@@ -88,8 +88,9 @@ async def meta(ctx, *format):
 async def chaoscommander(ctx, **kwargs):
     embed = discord.Embed(title= 'CHAOS REIGNS')
     for args in kwargs.items():
+        joueurs = args
         args_commander = random_commander()
-        embed.add_field(name= args, value= args_commander)
+        embed.add_field(name= joueurs, value= args_commander)
     await ctx.send (embed=embed)
     await ctx.send ("https://giphy.com/gifs/skdJmptBR4iic")
         
