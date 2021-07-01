@@ -67,10 +67,10 @@ async def meta(ctx, *format):
         deckurl = 'https://www.mtggoldfish.com' + deck.find('a').get('href')
         results[nom] = deckurl
    
-    json.dumps(results)
+    
 
-    meta = json.load(results)
-    meta_embed = discord.Embed.from_dict(meta)
+    
+    meta_embed = discord.Embed.from_dict(results)
     embed = discord.Embed()
     embed.description = f'La meta du {format} selon [MTGGoldfish]({url}:{meta_embed}' 
     await ctx.send (embed=embed)
