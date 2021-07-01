@@ -71,9 +71,9 @@ async def meta(ctx, *format):
 
     
     meta_embed = discord.Embed.from_dict(results)
-    embed = discord.Embed()
-    embed.description = f'La meta du {format} selon [MTGGoldfish]({url}:{meta_embed}' 
-    await ctx.send (embed=embed)
+    #embed = discord.Embed()
+    #embed.description = f'La meta du {format} selon [MTGGoldfish]({url}):{meta_embed}' 
+    await ctx.send (embed=meta_embed)
 
 #token = load_token()
 if __name__ == "__main__":
