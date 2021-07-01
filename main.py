@@ -91,15 +91,21 @@ async def meta(ctx, *format):
 @bot.command()
 async def chaoscommander(ctx, *args):
     embed = discord.Embed(title= 'CHAOS REIGNS')
-    for arg in args:
-        joueurs = arg
-        print(joueurs)
-        args_commander = random_commander()
-        print(args_commander)
-        for key, value in args_commander.items():
-            embed.add_field(name= joueurs, value= f'[{key}]({value})')
-    await ctx.send (embed=embed)
-    await ctx.send ("https://giphy.com/gifs/skdJmptBR4iic")
+    if args == None:
+       args_commander = random_commander()
+       for key, value in args_commander.items():
+            embed.add_field(name= 'Commander au hasard', value= f'[{key}]({value})')
+       await ctx.send (embed=embed)
+    else:
+        for arg in args:
+            joueurs = arg
+            print(joueurs)
+            args_commander = random_commander()
+            print(args_commander)
+            for key, value in args_commander.items():
+                embed.add_field(name= joueurs, value= f'[{key}]({value})')
+        await ctx.send (embed=embed)
+        await ctx.send ("https://giphy.com/gifs/skdJmptBR4iic")
         
 #token = load_token()
 
