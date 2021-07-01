@@ -2,6 +2,8 @@ import os
 import discord
 import json
 import requests
+from bs4 import BeautifulSoup
+import urllib.request
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix="!")
@@ -16,7 +18,7 @@ channel_id = os.getenv("CHANNEL_ID")
 @bot.event
 async def on_ready():
     channel = bot.get_channel(channel_id)
-    await channel.send('ScryFallBot Radis')
+    # await channel.send('ScryFallBot Radis')
 
 @bot.command()
 async def carte(ctx, *cardname):
@@ -45,6 +47,31 @@ async def carte(ctx, *cardname):
         embed.add_field(name= "Texte Oracle", value= oracle_text)
     embed.set_thumbnail(url=image)
 
+    await ctx.send (embed=embed)
+
+@bot.command()
+async def meta(ctx, *format):
+    url = f'https://www.mtggoldfish.com/metagame/{format}#paper'
+
+    page = urllib.request.urlopen(url)
+    soup = BeautifulSoup(page, 'html.parser')
+
+    deckcard = soup.find('div', attrs={'class': 'archetype-tile-container'})
+    decks = deckcard.find_all('span', attrs={'class':'deck-price-paper'})
+
+
+    results = {}
+    for deck in decks:
+        nom = deck.get_text().strip('\n')
+        deckurl = 'https://www.mtggoldfish.com' + deck.find('a').get('href')
+        results[nom] = deckurl
+   
+    json.dumps(results)
+
+    meta = json.load(results)
+    meta_embed = discord.Embed.from_dict(meta)
+    embed = discord.Embed()
+    embed.description = f'La meta du {format} selon [MTGGoldfish]({url}:{meta_embed}' 
     await ctx.send (embed=embed)
 
 #token = load_token()
