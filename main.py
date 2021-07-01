@@ -89,6 +89,7 @@ async def chaoscommander(ctx, **kwargs):
     embed = discord.Embed(title= 'CHAOS REIGNS')
     for args in kwargs.items():
         joueurs = args
+        print(joueurs)
         args_commander = random_commander()
         embed.add_field(name= joueurs, value= args_commander)
     await ctx.send (embed=embed)
