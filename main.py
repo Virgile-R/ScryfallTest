@@ -51,7 +51,8 @@ async def carte(ctx, *cardname):
 
 @bot.command()
 async def meta(ctx, *format):
-    url = f'https://www.mtggoldfish.com/metagame/{format}#paper'
+    nomformat = '+'.join(format)
+    url = f'https://www.mtggoldfish.com/metagame/{nomformat}#paper'
 
     page = urllib.request.urlopen(url)
     soup = BeautifulSoup(page, 'html.parser')
