@@ -71,8 +71,9 @@ async def meta(ctx, *format):
 
     
     nomformat = '+'.join(format).capitalize()
+    listedeck = '\n'.join(f'[{key}] ({value}) \n' for key, value in results.items())
     embed = discord.Embed()
-    embed.description = f'La meta du {nomformat} selon [MTGGoldfish]({url})' 
+    embed.description = f'La meta du {nomformat} selon [MTGGoldfish]({url}):\n {listedeck}'
     await ctx.send (embed=embed)
 
 #token = load_token()
