@@ -20,7 +20,7 @@ def random_commander():
     apiurl = 'https://api.scryfall.com/cards/search?q=is%3Acommander+legal%3Acommander'
    
     result = dict()
-    commander = [] 
+    commander = dict()
     while apiurl:
          datacommander = requests.get(apiurl).json()
          commander.append(datacommander["data"])
