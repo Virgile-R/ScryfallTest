@@ -24,7 +24,7 @@ def random_commander():
     while apiurl:
          datacommander = requests.get(apiurl).json()
          print(datacommander["data"])
-         commander.update(datacommander["data"])
+         commander = datacommander["data"]
          if datacommander["has_more"]:
             apiurl = datacommander["next_page"]
          else:
