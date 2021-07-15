@@ -18,7 +18,7 @@ channel_id = os.getenv("CHANNEL_ID")
 
 async def random_commander():
     apiurl = 'https://api.scryfall.com/cards/search?q=is%3Acommander+legal%3Acommander'
-    datacommander = await requests.get(apiurl).json()
+    datacommander = requests.get(apiurl).json()
     result = dict()
     commander = datacommander["data"]
     print(len(commander))
