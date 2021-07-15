@@ -16,7 +16,7 @@ channel_id = os.getenv("CHANNEL_ID")
 #        lines = f.readlines()
 #        return lines[0].strip()
 
-async def random_commander():
+def random_commander():
     apiurl = 'https://api.scryfall.com/cards/search?q=is%3Acommander+legal%3Acommander'
     datacommander = requests.get(apiurl).json()
     result = dict()
