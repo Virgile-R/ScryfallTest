@@ -21,10 +21,10 @@ def random_commander():
    
     result = dict()
     commander = [] 
-    while apiurl is not 0:
+    while apiurl != 0:
          datacommander = requests.get(apiurl).json()
          commander.append(datacommander["data"])
-         if datacommander["has_more"] is true:
+         if datacommander["has_more"] == true:
             apiurl = datacommander["next_page"]
          else:
             apiurl = 0
