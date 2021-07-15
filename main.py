@@ -21,10 +21,15 @@ def random_commander():
    
     result = dict()
     commander = [] 
-    while apiurl:
+    while apiurl is not nothing:
          datacommander = requests.get(apiurl).json()
          commander.append(datacommander["data"])
-         apiurl = datacommander['next_page']
+         if datacommander["has_more"] is true:
+            apiurl = datacommander["next_page"]
+         else:
+            apiurl = nothing
+         
+         
     
     print(len(commander))
     random_index = random.randint(0, len(commander)-1)
