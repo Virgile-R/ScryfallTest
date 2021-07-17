@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import urllib.request
 from discord.ext import commands
 import random
-
+import numpy as np
 bot = commands.Bot(command_prefix="!")
 token = os.getenv("DISCORD_TOKEN")
 channel_id = os.getenv("CHANNEL_ID")
@@ -15,19 +15,43 @@ channel_id = os.getenv("CHANNEL_ID")
 #    with open("token.txt" , "r") as f:
 #        lines = f.readlines()
 #        return lines[0].strip()
+BOOSTER_GEN = None
+COMMANDER_GEN = None
+
+def get_commander_dataset():
+    commander = list()
+    apiurl = 'https://api.scryfall.com/cards/search?q=is%3Acommander+legal%3Acommander'
+    while apiurl:
+        # la request
+        datacommander = requests.get(apiurl).json()
+        #  les datas     
+        commanderprov = [ (card['name'] ,card['related_uris']['edhrec'])  for card in  datacommander["data"]]
+        commander = commander +   commanderprov
+        if datacommander["has_more"]:
+            apiurl = datacommander["next_page"]
+        else:
+            apiurl = None
+    return commander
+
+class random_commander_generator():
+    def __init__(self):
+        self.database = get_commander_dataset()
+    def generate_excluding_commander(self, n_players ):
+        random.shuffle(self.database)
+        return self.database[:n_players]
 
 def random_commander():
     apiurl = 'https://api.scryfall.com/cards/search?q=is%3Acommander+legal%3Acommander'
    
     result = dict()
-    commanderprov = dict()
+    # commanderprov = dict()
     commander = list()
     while apiurl:
         # la request
         datacommander = requests.get(apiurl).json()
         #  les datas     
-        commanderprov = datacommander["data"]
-        commander.update( commanderprov )
+        commanderprov = [ (card['name'] ,card['related_uris']['edhrec'])  for card in  datacommander["data"]]
+        commander = commander +   commanderprov
         if datacommander["has_more"]:
             apiurl = datacommander["next_page"]
         else:
@@ -35,10 +59,58 @@ def random_commander():
 
     # print(len(commander))
     random_index = random.randint(0, len(commander)-1)
-    cmdname = commander[random_index]['name']
+    cmdname = commander[random_index]
     cmdurl = commander[random_index]['related_uris']['edhrec']
     result[cmdname] = cmdurl
     return result
+
+def arrange_dataset_per_rarity( cards_list ):
+    # rarity = ['common', 'uncommon', 'rare', 'mythic']
+    rarity_dict = {'common':[], 'uncommon':[], 'rare':[], 'mythic':[]}
+    for card in cards_list:
+        card_type = card['type_line'] 
+        if  card_type.find("Basic Land") == -1:
+            rarity_dict[card['rarity']].append(card)
+    return rarity_dict
+
+
+class random_sealed_booster_generator(  ):
+    def __init__(self,set):
+        apiurl = 'https://api.scryfall.com/sets/' + set
+        result = list()
+        dataset_info = requests.get(apiurl).json()
+        apiurl = dataset_info['search_uri']
+        dataset_card = requests.get(apiurl).json()
+        cards = dataset_card['data']
+        while bool( dataset_card['has_more'] ):
+            apiurl = dataset_card['next_page']
+            dataset_card = requests.get(apiurl).json()
+            cards += dataset_card['data']
+        self.dictionary = arrange_dataset_per_rarity(cards_list= cards)
+        self.n_common = len( self.dictionary['common'])
+        self.n_uncommon = len( self.dictionary['uncommon'])
+        self.n_rare = len( self.dictionary['rare'])
+        self.n_mythic = len( self.dictionary['mythic'])
+        self.probability = 0.9
+    
+    def get_a_booster(self):
+        booster = list()
+
+        random.shuffle( self.dictionary['common']) 
+        random.shuffle( self.dictionary['uncommon']) 
+        random.shuffle( self.dictionary['rare']) 
+        random.shuffle( self.dictionary['mythic']) 
+        coin = np.random.binomial(2,self.probability)
+        
+        booster = booster + self.dictionary['common'][:10] 
+        booster = booster +  self.dictionary['uncommon'] [:3]
+        if coin == 1:
+            booster = booster + self.dictionary['mythic'][:1]
+        else :
+            booster = booster +  self.dictionary['rare'] [:1]
+        return booster
+
+
 
 @bot.event
 async def on_ready():
@@ -104,21 +176,51 @@ async def meta(ctx, *format):
 @bot.command()
 async def chaoscommander(ctx, *args):
     embed = discord.Embed(title= 'CHAOS REIGNS')
+    if COMMANDER_GEN is None:
+        COMMANDER_GEN = random_commander_generator()
     if not args:
-       args_commander = random_commander()
-       for key, value in args_commander.items():
-            embed.add_field(name= 'Commander au hasard', value= f'[{key}]({value})')
+       args_commander = COMMANDER_GEN.generate_excluding_commander(1)
+       for curr_tuple in args_commander:
+            embed.add_field(name= 'Commander au hasard',
+             value= f'[{curr_tuple[0]}]({curr_tuple[1]})')
        await ctx.send (embed=embed)
     else:
-        for arg in args:
+        args_commander = random_commander(len(args))
+        for k,arg in enumerate(args):
             joueurs = arg
             print(joueurs)
-            args_commander = random_commander()
-            print(args_commander)
-            for key, value in args_commander.items():
-                embed.add_field(name= joueurs, value= f'[{key}]({value})')
+            print(args_commander[k])
+            for curr_tuple in args_commander[k]:
+                    embed.add_field(name= 'Commander au hasard',
+                    value= f'[{curr_tuple[0]}]({curr_tuple[1]})')
         await ctx.send (embed=embed)
         await ctx.send ("https://giphy.com/gifs/skdJmptBR4iic")
+
+
+@bot.command()
+async def sealed(ctx, *args):
+    embed = discord.Embed(title= 'SEALED')
+    if not args:
+       str_ = 'Il manque les noms des joueurs! Sale ragondin!'
+       embed.add_field(name= "Message d'insulte:", value= f'[insulte]({str_})')
+       await ctx.send (embed=embed)
+    else:
+        if BOOSTER_GEN is None:
+            BOOSTER_GEN = random_sealed_booster_generator('afr')
+
+        
+        for  player_name in  args:
+            boosters = [BOOSTER_GEN.get_a_booster() for k in range(6) ]
+            cards = [ cards['name'] for cards in booster for booster in boosters ]
+            player_card_file = player_name + "cards.txt"
+            with open(player_card_file, "wt") as file:
+                for card in cards: 
+                    file.write(card + '\n')
+            with open(player_card_file, "rb") as file:
+                await ctx.send("Your file is:", file=discord.File(file,player_card_file))
+
+        await ctx.send (embed=embed)
+        await ctx.send ("https://media.giphy.com/media/oS8pRFxbD0d44/giphy.gif")
         
 #token = load_token()
 
