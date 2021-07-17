@@ -199,6 +199,7 @@ async def chaoscommander(ctx, *args):
 async def sealed(ctx, *args):
     BOOSTER_GEN = None
     embed = discord.Embed(title= 'SEALED')
+    await ctx.send (embed=embed)
     if not args:
        str_ = 'Il manque les noms des joueurs! Sale ragondin!'
        embed.add_field(name= "Message d'insulte:", value= f'insulte({str_})')
@@ -216,9 +217,8 @@ async def sealed(ctx, *args):
                 for card in cards: 
                     file.write(card + '\n')
             with open(player_card_file, "rb") as file:
-                await ctx.send("Your file is:", file=discord.File(file,player_card_file))
+                await ctx.send(player_name + "! Your file is:", file=discord.File(file,player_card_file))
 
-        await ctx.send (embed=embed)
         await ctx.send ("https://media.giphy.com/media/oS8pRFxbD0d44/giphy.gif")
         
 #token = load_token()
