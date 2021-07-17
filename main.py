@@ -7,16 +7,15 @@ import urllib.request
 from discord.ext import commands
 import random
 import numpy as np
+
 bot = commands.Bot(command_prefix="!")
-token = os.getenv("DISCORD_TOKEN")
-channel_id = os.getenv("CHANNEL_ID")
+token = 'ODY1OTMyODc0MTYyNTAzNzAw.YPLM1Q.p32wbKlOnjNg_NAdX0TzqMaaozw'
+channel_id = '840631684961796146'
 #fonction pour loader le token
 #def load_token():
 #    with open("token.txt" , "r") as f:
 #        lines = f.readlines()
 #        return lines[0].strip()
-BOOSTER_GEN = None
-COMMANDER_GEN = None
 
 def get_commander_dataset():
     commander = list()
@@ -175,43 +174,43 @@ async def meta(ctx, *format):
 
 @bot.command()
 async def chaoscommander(ctx, *args):
+    COMMANDER_GEN = None
     embed = discord.Embed(title= 'CHAOS REIGNS')
     if COMMANDER_GEN is None:
-        COMMANDER_GEN = random_commander_generator()
+        COMMANDER_GEN = random_commander_generator()    
     if not args:
-       args_commander = COMMANDER_GEN.generate_excluding_commander(1)
-       for curr_tuple in args_commander:
+        args_commander = COMMANDER_GEN.generate_excluding_commander(1)
+        for key,arg in args_commander:
             embed.add_field(name= 'Commander au hasard',
-             value= f'[{curr_tuple[0]}]({curr_tuple[1]})')
-       await ctx.send (embed=embed)
+                value= f'[{key}]({arg})')
+        await ctx.send (embed=embed)
     else:
-        args_commander = random_commander(len(args))
-        for k,arg in enumerate(args):
-            joueurs = arg
-            print(joueurs)
-            print(args_commander[k])
-            for curr_tuple in args_commander[k]:
-                    embed.add_field(name= 'Commander au hasard',
-                    value= f'[{curr_tuple[0]}]({curr_tuple[1]})')
+        args_commander = COMMANDER_GEN.generate_excluding_commander( len(args) )
+        for k,tpl in enumerate(args):
+            joueur = args[k]
+            key,arg = args_commander[k]
+            embed.add_field(name= joueur,
+             value= f'[{key}]({arg})')
         await ctx.send (embed=embed)
         await ctx.send ("https://giphy.com/gifs/skdJmptBR4iic")
 
 
 @bot.command()
 async def sealed(ctx, *args):
+    BOOSTER_GEN = None
     embed = discord.Embed(title= 'SEALED')
     if not args:
        str_ = 'Il manque les noms des joueurs! Sale ragondin!'
-       embed.add_field(name= "Message d'insulte:", value= f'[insulte]({str_})')
+       embed.add_field(name= "Message d'insulte:", value= f'insulte({str_})')
        await ctx.send (embed=embed)
     else:
         if BOOSTER_GEN is None:
             BOOSTER_GEN = random_sealed_booster_generator('afr')
-
-        
         for  player_name in  args:
-            boosters = [BOOSTER_GEN.get_a_booster() for k in range(6) ]
-            cards = [ cards['name'] for cards in booster for booster in boosters ]
+            boosters = [ ]
+            for k in range(6) : 
+                boosters = boosters + BOOSTER_GEN.get_a_booster() 
+            cards = [ cards['name'] for cards in boosters ]
             player_card_file = player_name + "cards.txt"
             with open(player_card_file, "wt") as file:
                 for card in cards: 
