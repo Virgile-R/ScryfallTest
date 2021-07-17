@@ -9,8 +9,8 @@ import random
 import numpy as np
 
 bot = commands.Bot(command_prefix="!")
-token = 'ODY1OTMyODc0MTYyNTAzNzAw.YPLM1Q.p32wbKlOnjNg_NAdX0TzqMaaozw'
-channel_id = '840631684961796146'
+token = os.getenv("DISCORD_TOKEN")
+channel_id = os.getenv("CHANNEL_ID")
 #fonction pour loader le token
 #def load_token():
 #    with open("token.txt" , "r") as f:
