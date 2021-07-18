@@ -5,10 +5,12 @@ import requests
 from bs4 import BeautifulSoup
 import urllib.request
 from discord.ext import commands
+from discord import Client
 import random
 import numpy as np
 
 bot = commands.Bot(command_prefix="!")
+client = Client()
 token = os.getenv("DISCORD_TOKEN")
 channel_id = os.getenv("CHANNEL_ID")
 #fonction pour loader le token
@@ -108,6 +110,11 @@ class random_sealed_booster_generator(  ):
         else :
             booster = booster +  self.dictionary['rare'] [:1]
         return booster
+
+
+
+
+
 
 
 
