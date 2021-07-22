@@ -4,6 +4,10 @@ body {
     font-size: 13.5px;
     line-height: 1.2em;
   }
+.br {
+  display: block;
+  margin-bottom: 0em;
+}  
   body *{
     box-sizing: border-box;
     max-width: 100%;

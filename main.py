@@ -8,7 +8,7 @@ from discord.ext import commands
 from discord import Client
 import random
 import numpy as np
-
+from test import generate_monster_block
 bot = commands.Bot(command_prefix="!")
 client = Client()
 token = os.getenv("DISCORD_TOKEN")
@@ -139,6 +139,14 @@ async def dndsearch(ctx, cat, nom):
         embed.add_field(name=data['name'], url=data['url'])
     
     await ctx.send(embed=embed)
+
+@bot.command()
+async def dndmonster(ctx,monster):
+    output = generate_monster_block(monster)
+    embed = discord.Embed(Title=monster)
+    file = discord.File(output, filename="image.png")
+    embed.set_image(url=f"attachment://image.png")
+    await ctx.send(file=file, embed=embed)
 
 @bot.command()
 async def carte(ctx, *cardname):
