@@ -8,7 +8,7 @@ from discord.ext import commands
 from discord import Client
 import random
 import numpy as np
-from test import generate_monster_block
+from dnd import generate_monster_block
 bot = commands.Bot(command_prefix="!")
 client = Client()
 token = os.getenv("DISCORD_TOKEN")
@@ -123,34 +123,40 @@ async def on_ready():
     channel = bot.get_channel(channel_id)
     # await channel.send('ScryFallBot Radis')
 
-@bot.command()
-async def dndsearch(ctx, cat, nom):
-    categories = ['ability-scores', 'skills', 'proficiencies', 'languages', 'alignment', 'backgrounds', 'classes', 'subclasses', 'features', 'starting-equipment', 'races', 'subraces', 'traits', 'equipment-categories', 'equipment', 'magic-items', 'weapon-properties', 'spells', 'monsters', 'conditions', 'damage-types', 'magic-schools', 'rules', 'rule-sections' ]
-    nom_recherche = '+'.join(nom).lower()
-    nom_cat = '-'.join(cat).lower()
-    apiurl = f'https://www.dnd5eapi.co/api/{nom_cat}/{nom_recherche}'
-    data = requests.get(apiurl).json()
-    embed = discord.Embed(Title="Résultat de la recherche")
-    if not cat:
-        embed = discord.Embed(Title="Catégories de recherche")
-        for a in categories:
-            embed.add_field(a)
-    else:
-        embed.add_field(name=data['name'], url=data['url'])
+# @bot.command()
+# async def dndsearch(ctx, cat, nom):
+#     categories = ['ability-scores', 'skills', 'proficiencies', 'languages', 'alignment', 'backgrounds', 'classes', 'subclasses', 'features', 'starting-equipment', 'races', 'subraces', 'traits', 'equipment-categories', 'equipment', 'magic-items', 'weapon-properties', 'spells', 'monsters', 'conditions', 'damage-types', 'magic-schools', 'rules', 'rule-sections' ]
+#     nom_recherche = '+'.join(nom).lower()
+#     nom_cat = '-'.join(cat).lower()
+#     apiurl = f'https://www.dnd5eapi.co/api/{nom_cat}/{nom_recherche}'
+#     data = requests.get(apiurl).json()
+#     embed = discord.Embed(Title="Résultat de la recherche")
+#     if not cat:
+#         embed = discord.Embed(Title="Catégories de recherche")
+#         for a in categories:
+#             embed.add_field(a)
+#     else:
+#         embed.add_field(name=data['name'], url=data['url'])
     
-    await ctx.send(embed=embed)
+#     await ctx.send(embed=embed)
 
 @bot.command()
-async def dndmonster(ctx,monster):
-    output = generate_monster_block(monster)
-    embed = discord.Embed(Title=monster)
-    file = discord.File(output, filename="image.png")
-    embed.set_image(url=f"attachment://image.png")
-    await ctx.send(file=file, embed=embed)
+async def dndmonster(ctx, *monster):
+    monster_name = '-'.join(monster)
+    print(monster_name)
+    output = generate_monster_block(monster_name)
+    if output is False:
+        await ctx.send("Nous n'avons pas trouvé de monstre qui porte ce nom!")
+    else:
+        embed = discord.Embed(Title=monster)
+        file = discord.File(output, filename="image.png")
+        embed.set_image(url=f"attachment://image.png")
+        await ctx.send(file=file, embed=embed)
 
 @bot.command()
 async def carte(ctx, *cardname):
     nom_carte = '+'.join(cardname)
+   
     apiurl = f'https://api.scryfall.com/cards/named?fuzzy={nom_carte}'
     data =  requests.get(apiurl).json()
     if 'code' in data:
