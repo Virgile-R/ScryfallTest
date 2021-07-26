@@ -265,15 +265,15 @@ def generate_monster_block(m):
         with open(f'./html/{m.index}.html', 'w', encoding='UTF8') as test_file:
             test_file.write(content)
 
-        options= {
-            'enable-local-file-access': '',
-            'width': '1280',
-            'quality': 50
-            
-            
-        }
+            options= {
+                'enable-local-file-access': '',
+                'width': '1280',
+                'quality': 50
+                
+                
+            }
 
 
-        imgkit.from_file(test_file, output, config=imgkitconfig, options=options)
+            imgkit.from_file(test_file, output, config=imgkitconfig, options=options)
         
         return output
