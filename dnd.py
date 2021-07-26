@@ -262,7 +262,7 @@ def generate_monster_block(m):
 
         content = doc.getvalue()
 
-        with open(f'./html/{m.index}.html', 'w', encoding='UTF8') as test_file:
+        with open(f'./html/{m.index}.html', 'w+', encoding='UTF8') as test_file:
             test_file.write(content)
 
             options= {
