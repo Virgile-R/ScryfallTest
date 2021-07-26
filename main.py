@@ -148,7 +148,7 @@ async def dndmonster(ctx, *nom_monstre):
         m = Monster(monster_name) 
         output = generate_monster_block(m)
     
-        embed = discord.Embed(title=m.name, url="https://www.dnd5eapi.co/api/monsters/"+ m.url)
+        embed = discord.Embed(title=m.name)
         file = discord.File(output, filename="image.png")
         embed.set_image(url=f"attachment://image.png")
         await ctx.send(file=file, embed=embed)
