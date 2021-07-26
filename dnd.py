@@ -274,6 +274,6 @@ def generate_monster_block(m):
         }
 
 
-        imgkit.from_file("./html/test.html", output, config=imgkitconfig, options=options)
+        imgkit.from_file(test_file, output, config=imgkitconfig, options=options)
         
         return output
