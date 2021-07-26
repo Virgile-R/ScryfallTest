@@ -144,17 +144,15 @@ async def on_ready():
 @bot.command()
 async def dndmonster(ctx, *nom_monstre):
     monster_name = '-'.join(nom_monstre).lower()
-    try:
-        m = Monster(monster_name) 
-        output = generate_monster_block(m)
-    
-        embed = discord.Embed(title=m.name)
-        file = discord.File(output, filename="image.png")
-        embed.set_image(url=f"attachment://image.png")
-        await ctx.send(file=file, embed=embed)
-    except ValueError:
-        await ctx.send("Pas de monstre de ce nom dans la base de donnée!")
 
+    m = Monster(monster_name) 
+    output = generate_monster_block(m)
+
+    embed = discord.Embed(title=m.name)
+    file = discord.File(output, filename="image.png")
+    embed.set_image(url=f"attachment://image.png")
+    await ctx.send(file=file, embed=embed)
+   
     
     
     
