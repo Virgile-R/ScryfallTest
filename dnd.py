@@ -15,7 +15,7 @@ import os, subprocess, sys
 imgkitconfig = imgkit.config(wkhtmltoimage='bin/wkhtmltoimage')
 class Monster:
     def __init__(self, monster) -> None:
-        apiurl = "https://www.dnd5eapi.co/api/monsters/"+ monster
+        apiurl = "http://www.dnd5eapi.co/api/monsters/"+ monster
          
         r = requests.get(apiurl)
         if r.status_code == 404:
