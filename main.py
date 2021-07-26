@@ -13,10 +13,7 @@ bot = commands.Bot(command_prefix="!")
 client = Client()
 token = os.getenv("DISCORD_TOKEN")
 channel_id = os.getenv("CHANNEL_ID")
-os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable)  
-WKHTMLTOPDF_CMD = subprocess.Popen(
-    ['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')], # Note we default to 'wkhtmltopdf' as the binary name
-    stdout=subprocess.PIPE).communicate()[0].strip()
+
 #fonction pour loader le token
 #def load_token():
 #    with open("token.txt" , "r") as f:
