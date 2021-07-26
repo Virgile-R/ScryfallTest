@@ -8,7 +8,7 @@ from discord.ext import commands
 from discord import Client
 import random
 import numpy as np
-from dnd import generate_monster_block
+from dnd import generate_monster_block, Monster
 bot = commands.Bot(command_prefix="!")
 client = Client()
 token = os.getenv("DISCORD_TOKEN")
@@ -141,17 +141,19 @@ async def on_ready():
 #     await ctx.send(embed=embed)
 
 @bot.command()
-async def dndmonster(ctx, *monster):
-    monster_name = '-'.join(monster)
-    print(monster_name)
-    output = generate_monster_block(monster_name)
-    if output is False:
-        await ctx.send("Nous n'avons pas trouvé de monstre qui porte ce nom!")
-    else:
-        embed = discord.Embed(Title=monster)
+async def dndmonster(ctx, *nom_monstre):
+    monster_name = '-'.join(nom_monstre).lower()
+    m = Monster(monster_name) 
+    output = generate_monster_block(m)
+    try:
+        embed = discord.Embed(Title=m.name, URL=m.url)
         file = discord.File(output, filename="image.png")
         embed.set_image(url=f"attachment://image.png")
         await ctx.send(file=file, embed=embed)
+    except ValueError:
+        await ctx.send("Pas de monstre de ce nom dans la base de donnée!")
+    
+        
 
 @bot.command()
 async def carte(ctx, *cardname):
