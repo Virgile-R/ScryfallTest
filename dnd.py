@@ -74,7 +74,7 @@ def generate_monster_block(m):
         return output
     else: 
         doc, tag, text = Doc().tagtext()
-        doc.asis('<!DOCTYPE html><link rel="stylesheet" href="..\css\stylednd.css"> <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:7monstermonster" rel="stylesheet" type="text/css">', '<link href="https://fonts.googleapis.com/css?family=Noto+Sans:4monstermonster,7monstermonster,4monstermonsteritalic,7monstermonsteritalic" rel="stylesheet" type="text/css">', '<div class="stat-block wide">	<hr class="orange-border" /> <div class="section-left"> <div class="creature-heading">')
+        doc.asis('<!DOCTYPE html><link rel="stylesheet" href="..\css\stylednd.css"> <link href="http://fonts.googleapis.com/css?family=Libre+Baskerville:7monstermonster" rel="stylesheet" type="text/css">', '<link href="http://fonts.googleapis.com/css?family=Noto+Sans:4monstermonster,7monstermonster,4monstermonsteritalic,7monstermonsteritalic" rel="stylesheet" type="text/css">', '<div class="stat-block wide">	<hr class="orange-border" /> <div class="section-left"> <div class="creature-heading">')
 
         with tag('h1'):
             text(m.name)
