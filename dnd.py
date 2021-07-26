@@ -69,8 +69,8 @@ class Monster:
 
 
 def generate_monster_block(m):
-    output = f"./img/{m.index}.png"
-    if path.exists(f'./img/{m.index}.png'):
+    output = f"./img/{m.index}.jpg"
+    if path.exists(f'./img/{m.index}.jpg'):
         return output
     else: 
         doc, tag, text = Doc().tagtext()
