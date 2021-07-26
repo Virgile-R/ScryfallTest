@@ -15,7 +15,7 @@ import os, subprocess, sys
 imgkitconfig = imgkit.config(wkhtmltoimage='bin/wkhtmltoimage')
 class Monster:
     def __init__(self, monster) -> None:
-        apiurl = "http://www.dnd5eapi.co/api/monsters/"+ monster
+        apiurl = "https://www.dnd5eapi.co/api/monsters/"+ monster
          
         r = requests.get(apiurl)
         if r.status_code == 404:
@@ -69,8 +69,8 @@ class Monster:
 
 
 def generate_monster_block(m):
-    output = f"img/{m.index}.png"
-    if path.exists(f'img/{m.index}.png'):
+    output = f"/img/{m.index}.png"
+    if path.exists(f'/img/{m.index}.png'):
         return output
     else: 
         doc, tag, text = Doc().tagtext()
