@@ -12,7 +12,7 @@ import os, subprocess, sys
 #     ['which', os.environ.get('WKHTMLTOIMAGE_BINARY', 'wkhtmltoimage')], # Note we default to 'wkhtmltopdf' as the binary name
 #     stdout=subprocess.PIPE).communicate()[0].strip()
 
-imgkitconfig = imgkit.config(wkhtmltoimage='bin/wkhtmltoimage')
+imgkitconfig = imgkit.config(wkhtmltoimage='./app/bin/wkhtmltoimage')
 class Monster:
     def __init__(self, monster) -> None:
         apiurl = "https://www.dnd5eapi.co/api/monsters/"+ monster
