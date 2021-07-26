@@ -7,12 +7,12 @@ import os.path
 from os import path
 import os, subprocess, sys
 
-os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable)  
-WKHTMLTOIMAGE_CMD = subprocess.Popen(
-    ['which', os.environ.get('WKHTMLTOIMAGE_BINARY', 'wkhtmltoimage')], # Note we default to 'wkhtmltopdf' as the binary name
-    stdout=subprocess.PIPE).communicate()[0].strip()
+# os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable)  
+# WKHTMLTOIMAGE_CMD = subprocess.Popen(
+#     ['which', os.environ.get('WKHTMLTOIMAGE_BINARY', 'wkhtmltoimage')], # Note we default to 'wkhtmltopdf' as the binary name
+#     stdout=subprocess.PIPE).communicate()[0].strip()
 
-imgkitconfig = imgkit.config(wkhtmltoimage=WKHTMLTOIMAGE_CMD)
+imgkitconfig = imgkit.config(wkhtmltoimage='bin/wkhtmltoimage')
 class Monster:
     def __init__(self, monster) -> None:
         apiurl = "https://www.dnd5eapi.co/api/monsters/"+ monster
