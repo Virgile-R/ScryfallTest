@@ -12,7 +12,7 @@ import os, subprocess, sys
 #     ['which', os.environ.get('WKHTMLTOIMAGE_BINARY', 'wkhtmltoimage')], # Note we default to 'wkhtmltopdf' as the binary name
 #     stdout=subprocess.PIPE).communicate()[0].strip()
 
-imgkitconfig = imgkit.config(wkhtmltoimage='bin/wkhtmltoimage')
+#imgkitconfig = imgkit.config(wkhtmltoimage='bin/wkhtmltoimage')
 class Monster:
     def __init__(self, monster) -> None:
         apiurl = "https://www.dnd5eapi.co/api/monsters/"+ monster
@@ -69,8 +69,8 @@ class Monster:
 
 
 def generate_monster_block(m):
-    output = f"/img/{m.index}.png"
-    if path.exists(f'/img/{m.index}.png'):
+    output = f"./img/{m.index}.png"
+    if path.exists(f'./img/{m.index}.png'):
         return output
     else: 
         doc, tag, text = Doc().tagtext()
@@ -274,6 +274,6 @@ def generate_monster_block(m):
         }
 
 
-        imgkit.from_file("./html/test.html", output, config=imgkitconfig, options=options)
+        imgkit.from_file("./html/test.html", output, options=options)
         
         return output
