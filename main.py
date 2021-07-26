@@ -8,7 +8,7 @@ from discord.ext import commands
 from discord import Client
 import random
 import numpy as np
-
+from dnd import generate_monster_block, Monster
 bot = commands.Bot(command_prefix="!")
 client = Client()
 token = os.getenv("DISCORD_TOKEN")
@@ -123,9 +123,42 @@ async def on_ready():
     channel = bot.get_channel(channel_id)
     # await channel.send('ScryFallBot Radis')
 
+# @bot.command()
+# async def dndsearch(ctx, cat, nom):
+#     categories = ['ability-scores', 'skills', 'proficiencies', 'languages', 'alignment', 'backgrounds', 'classes', 'subclasses', 'features', 'starting-equipment', 'races', 'subraces', 'traits', 'equipment-categories', 'equipment', 'magic-items', 'weapon-properties', 'spells', 'monsters', 'conditions', 'damage-types', 'magic-schools', 'rules', 'rule-sections' ]
+#     nom_recherche = '+'.join(nom).lower()
+#     nom_cat = '-'.join(cat).lower()
+#     apiurl = f'https://www.dnd5eapi.co/api/{nom_cat}/{nom_recherche}'
+#     data = requests.get(apiurl).json()
+#     embed = discord.Embed(Title="Résultat de la recherche")
+#     if not cat:
+#         embed = discord.Embed(Title="Catégories de recherche")
+#         for a in categories:
+#             embed.add_field(a)
+#     else:
+#         embed.add_field(name=data['name'], url=data['url'])
+    
+#     await ctx.send(embed=embed)
+
+@bot.command()
+async def dndmonster(ctx, *nom_monstre):
+    monster_name = '-'.join(nom_monstre).lower()
+    m = Monster(monster_name) 
+    output = generate_monster_block(m)
+    try:
+        embed = discord.Embed(Title=m.name, URL=m.url)
+        file = discord.File(output, filename="image.png")
+        embed.set_image(url=f"attachment://image.png")
+        await ctx.send(file=file, embed=embed)
+    except ValueError:
+        await ctx.send("Pas de monstre de ce nom dans la base de donnée!")
+    
+        
+
 @bot.command()
 async def carte(ctx, *cardname):
     nom_carte = '+'.join(cardname)
+   
     apiurl = f'https://api.scryfall.com/cards/named?fuzzy={nom_carte}'
     data =  requests.get(apiurl).json()
     if 'code' in data:
