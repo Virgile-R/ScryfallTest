@@ -257,7 +257,7 @@ def generate_monster_block(m):
         file = open(f'./html/{m.index}.html', 'rb')
         s3.Bucket('scryfall-assets').put_object(Key=f'/html/{m.index}.html', Body=file)
         options= {
-            'enable-local-file-access': '',
+            'enable-local-file-access': True,
             'width': '1280',
             'quality': 50
             
