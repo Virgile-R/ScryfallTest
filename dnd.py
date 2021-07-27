@@ -77,7 +77,7 @@ def generate_monster_block(m):
         with tag('h2'):
             text(m.size + " " + m.type + " " + m.alignment)
         doc.asis("""</div> <!-- creature heading -->
-                <svg height="5" width="100%" class="tapered-rule">
+                <svg height="5" width="100%" class="taperedrule">
                 <polyline points="0,0 400,2.5 0,5"></polyline>
             </svg>
                 <div class="top-stats">
@@ -98,7 +98,7 @@ def generate_monster_block(m):
                 
                 text(i + ":" + m.speed[i])  
         doc.asis("""</div> <!-- property line -->
-                    <svg height="5" width="100%" class="tapered-rule">
+                    <svg height="5" width="100%" class="taperedrule">
                 <polyline points="0,0 400,2.5 0,5"></polyline>
             </svg>
                     <div class="abilities">
@@ -162,7 +162,7 @@ def generate_monster_block(m):
             else:
                 text(f"{ab} (  {math.floor(ab_mod)})" )                   
         doc.asis("""</div> <!-- ability charisma --> </div> <!-- abilities -->
-                    <svg height="5" width="100%" class="tapered-rule">
+                    <svg height="5" width="100%" class="taperedrule">
                 <polyline points="0,0 400,2.5 0,5"></polyline>
             </svg>
                     <div class="property-line first">
@@ -201,7 +201,7 @@ def generate_monster_block(m):
             text(m.cr)
         doc.asis("""</div> <!-- property line -->
                 </div> <!-- top stats -->
-                <svg height="5" width="100%" class="tapered-rule">
+                <svg height="5" width="100%" class="taperedrule">
                 <polyline points="0,0, 400,2.5 0,5"></polyline>
             </svg>
                 <div class="property-block">  """)
@@ -212,7 +212,7 @@ def generate_monster_block(m):
                     doc.asis(f"<span class=\"br\"><b> {a[0]}</b> : {a[1]}</span></br>" ) 
             doc.asis("""</div> <!-- property block-->
                 </div> <!-- section left -->
-                <div class="section-right">
+                <div class="sectionright">
                     <div class="actions">
                         <h3>Actions</h3>
                         <div class="property-block"> """)
@@ -257,7 +257,7 @@ def generate_monster_block(m):
         file = open(f'./html/{m.index}.html', 'rb')
         s3.Bucket('scryfall-assets').put_object(Key=f'/html/{m.index}.html', Body=file)
         options= {
-            'enable-local-file-access': True,
+            'enable-local-file-access': '',
             'width': '1280',
             'quality': 50
             
