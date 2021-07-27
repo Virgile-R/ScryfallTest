@@ -184,7 +184,7 @@ body {
       .property-line,
       .property-block{
           width: 100%;
-          height: 100%;
+          
           display: block;
       }
       .stat-block.wide .section-left{
