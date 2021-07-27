@@ -140,5 +140,7 @@ dmypy.json
 cython_debug/
 token.txt
 *.exe
-/img
-/html
+/img/*
+/html/*
+!/img/.gitkeep
+!/html/.gitkeep
