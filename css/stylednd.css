@@ -31,7 +31,7 @@ body {
     text-align: center;
   }
   .stat-block.wide .section-left,
-  .stat-block.wide .section-right{
+  .stat-block.wide .sectionright{
     display: inline-block;
     vertical-align: top;
     width: 48%;
@@ -40,7 +40,7 @@ body {
   .stat-block.wide .section-left{
     margin-right: 1.5%;
   }
-  .stat-block.wide .section-right{
+  .stat-block.wide .sectionright{
     margin-left: 1.5%;
   }
   @media screen and (max-width: 675px){
@@ -48,14 +48,14 @@ body {
           min-width: 280px;
       }
       .stat-block.wide .section-left,
-      .stat-block.wide .section-right{
+      .stat-block.wide .sectionright{
         display: block;
         width: 100%;
       }
       .stat-block.wide .section-left{
         margin: 0;
       }
-      .stat-block.wide .section-right{
+      .stat-block.wide .sectionright{
           margin: 0;
       }
   }
@@ -71,7 +71,7 @@ body {
   .orange-border.bottom{
     margin: 15px -10px -20px;
   }
-  .tapered-rule{
+  .taperedrule{
     display: block;
     width: 100%;
     height: 5px;
@@ -180,7 +180,7 @@ body {
       .stat-block,
       .stat-block.wide, 
       .stat-block.wide .section-left,
-      .stat-block.wide .section-right,
+      .stat-block.wide .sectionright,
       .property-line,
       .property-block{
           width: 100%;
@@ -190,7 +190,7 @@ body {
       .stat-block.wide .section-left{
         margin: 0;
       }
-      .stat-block.wide .section-right{
+      .stat-block.wide .sectionright{
         margin: 0;
       }
       .stat-block{
