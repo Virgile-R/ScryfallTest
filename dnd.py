@@ -7,7 +7,7 @@ import os.path
 from os import path
 import boto3
 
-imgkitconfig = imgkit.config(wkhtmltoimage="app/bin/wkhtmltoimage")
+#imgkitconfig = imgkit.config(wkhtmltoimage="app/bin/wkhtmltoimage")
 s3 = boto3.resource('s3')
 class Monster:
     def __init__(self, monster) -> None:
@@ -265,6 +265,6 @@ def generate_monster_block(m):
         }
 
 
-        imgkit.from_file(f'./html/{m.index}.html', output, config=imgkitconfig, options=options)
+        imgkit.from_file(f'./html/{m.index}.html', output,  options=options)
         
         return output
