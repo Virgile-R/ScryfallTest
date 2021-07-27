@@ -265,6 +265,6 @@ def generate_monster_block(m):
         }
 
 
-        imgkit.from_url(f'https://scryfall-assets.s3.eu-west-3.amazonaws.com//html/{m.index}.html', output, config=imgkitconfig, options=options)
+        imgkit.from_url('https://scryfall-assets.s3.eu-west-3.amazonaws.com//html/'+ {m.index}+'.html', output, config=imgkitconfig, options=options)
         
         return output
