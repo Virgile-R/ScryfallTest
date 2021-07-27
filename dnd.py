@@ -5,6 +5,9 @@ import imgkit
 import requests
 import os.path
 from os import path
+import boto3
+
+s3 = boto3.resource('s3')
 class Monster:
     def __init__(self, monster) -> None:
         apiurl = "https://www.dnd5eapi.co/api/monsters/"+ monster
@@ -248,9 +251,10 @@ def generate_monster_block(m):
 
         content = doc.getvalue()
 
-        with open('./html/test.html', 'w', encoding='UTF8') as test_file:
+        with open(f'./html/{m.index}.html', 'w+', encoding='UTF8') as test_file:
             test_file.write(content)
-
+        file = open(f'./html/{m.index}.html', 'rb')
+        s3.Bucket('scryfall-assets').put_object(Key=f'/html/{m.index}.html', Body=file)
         options= {
             'enable-local-file-access': '',
             'width': '1280',
@@ -260,7 +264,6 @@ def generate_monster_block(m):
         }
 
 
-        imgkit.from_file("./html/test.html", output, options=options)
+        imgkit.from_file(f"./html/{m.index}.html", output, options=options)
         
         return output
-
