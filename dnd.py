@@ -224,7 +224,8 @@ def generate_monster_block(m):
         """   )  
         
 
-        try:
+        ##try:
+        if hasattr(m, 'legact'):
             doc.asis("""<div class="actions">
                     <h3>Legendary Actions</h3>
                     <div class="property-block">
@@ -241,15 +242,8 @@ def generate_monster_block(m):
             <hr class="orange-border bottom" />
         </div> <!-- stat block -->
         """)
-        except AttributeError:
-            doc.asis("""</div> <!-- property block -->
-                    
-                    
-                </div> <!-- actions -->
-            </div> <!-- section right -->
-            <hr class="orange-border bottom" />
-        </div> <!-- stat block -->
-        """)
+        # except AttributeError:
+        #     pass
 
 
         content = doc.getvalue()
@@ -269,3 +263,6 @@ def generate_monster_block(m):
         imgkit.from_file("./html/test.html", output, options=options)
         
         return output
+
+m = Monster('commoner')
+generate_monster_block(m)
