@@ -5,14 +5,10 @@ import imgkit
 import requests
 import os.path
 from os import path
-import os, subprocess, sys
+import boto3
 
-# os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable)  
-# WKHTMLTOIMAGE_CMD = subprocess.Popen(
-#     ['which', os.environ.get('WKHTMLTOIMAGE_BINARY', 'wkhtmltoimage')], # Note we default to 'wkhtmltopdf' as the binary name
-#     stdout=subprocess.PIPE).communicate()[0].strip()
-
-imgkitconfig = imgkit.config(wkhtmltoimage='/app/bin/wkhtmltoimage')
+imgkitconfig = imgkit.config(wkhtmltoimage="/bin/wkhtmltoimage")
+s3 = boto3.resource('s3')
 class Monster:
     def __init__(self, monster) -> None:
         apiurl = "https://www.dnd5eapi.co/api/monsters/"+ monster
@@ -232,7 +228,8 @@ def generate_monster_block(m):
         """   )  
         
 
-        try:
+        ##try:
+        if hasattr(m, 'legact'):
             doc.asis("""<div class="actions">
                     <h3>Legendary Actions</h3>
                     <div class="property-block">
@@ -249,22 +246,16 @@ def generate_monster_block(m):
             <hr class="orange-border bottom" />
         </div> <!-- stat block -->
         """)
-        except AttributeError:
-            doc.asis("""</div> <!-- property block -->
-                    
-                    
-                </div> <!-- actions -->
-            </div> <!-- section right -->
-            <hr class="orange-border bottom" />
-        </div> <!-- stat block -->
-        """)
+        # except AttributeError:
+        #     pass
 
 
         content = doc.getvalue()
 
         with open(f'./html/{m.index}.html', 'w+', encoding='UTF8') as test_file:
             test_file.write(content)
-
+        file = open(f'./html/{m.index}.html', 'rb')
+        s3.Bucket('scryfall-assets').put_object(Key=f'/html/{m.index}.html', Body=file)
         options= {
             'enable-local-file-access': '',
             'width': '1280',
