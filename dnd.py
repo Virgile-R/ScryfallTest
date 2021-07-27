@@ -264,5 +264,3 @@ def generate_monster_block(m):
         
         return output
 
-m = Monster('commoner')
-generate_monster_block(m)
