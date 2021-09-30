@@ -5,10 +5,10 @@ import imgkit
 import requests
 import os.path
 from os import path
-# import boto3
+
 
 imgkitconfig = imgkit.config(wkhtmltoimage="/app/bin/wkhtmltoimage")
-# s3 = boto3.resource('s3')
+
 class Monster:
     def __init__(self, monster) -> None:
         apiurl = "https://www.dnd5eapi.co/api/monsters/"+ monster
@@ -228,7 +228,7 @@ def generate_monster_block(m):
         """   )  
         
 
-        ##try:
+        
         if hasattr(m, 'legact'):
             doc.asis("""<div class="actions">
                     <h3>Legendary Actions</h3>
@@ -246,16 +246,14 @@ def generate_monster_block(m):
             <hr class="orange-border bottom" />
         </div> <!-- stat block -->
         """)
-        # except AttributeError:
-        #     pass
+       
 
 
         content = doc.getvalue()
 
         with open(f'./html/{m.index}.html', 'w+', encoding='UTF8') as test_file:
             test_file.write(content)
-        # file = open(f'./html/{m.index}.html', 'rb')
-        # s3.Bucket('scryfall-assets').put_object(Key=f'/html/{m.index}.html', Body=file)
+        
         options= {
             'enable-local-file-access': '',
             'width': '1280',
@@ -264,8 +262,7 @@ def generate_monster_block(m):
             
         }
 
-        #awsurl = 'https://scryfall-assets.s3.eu-west-3.amazonaws.com//html/'+ m.index+'.html'
-        #print(awsurl)
+       
         imgkit.from_file(f'./html/{m.index}.html', output, config=imgkitconfig, options=options)
         
         return output
