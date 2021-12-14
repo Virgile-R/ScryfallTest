@@ -254,5 +254,7 @@ async def calendar(ctx):
     }
     channel = await guild.create_text_channel('Nouvelle séance', overwrites=overwrites)
     channel.send('Première étape')
+
+
 if __name__ == "__main__":
     bot.run(token)
