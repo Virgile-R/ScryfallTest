@@ -251,7 +251,11 @@ async def calendrier(ctx):
         botUser: discord.PermissionOverwrite(read_messages=True)
     }
     channel = await guild.create_text_channel('Nouvelle séance', overwrites=overwrites)
-    await channel.send('Première étape')
+    await channel.send('Première étape: toi seul peut voir ce channel. Pour commencer donne moi au moins deux dates. tu peux aussi spécifier des utilisateurs que je pingerai.')
+
+    msg = await client.wait_for('message')
+    msgFormat = msg.content.split(' ')
+    await channel.send(f'Voici les dates que tu as choisi: {[date for date in msgFormat]}')
 
 
 if __name__ == "__main__":
