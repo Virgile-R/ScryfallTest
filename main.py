@@ -120,6 +120,7 @@ class random_sealed_booster_generator():
 @bot.event
 async def on_ready():
     channel = bot.get_channel(channel_id)
+    channel.send('hello')
 
 
 @bot.command()
@@ -245,7 +246,7 @@ async def sealed(ctx, *args):
 
 
 @bot.command
-async def calendar(ctx):
+async def calendrier(ctx):
     author = ctx.author
     guild = ctx.guild
     overwrites = {
