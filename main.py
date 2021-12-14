@@ -289,6 +289,7 @@ async def calendrier(ctx):
             await originChannel.send(finalMessage)
             await channel.send('Ce channel va maintenant s\'autodétruire. A plus.')
             await channel.delete()
-
+    else:
+        await channel.send("Si je vois ce message les emojis sont en cause logiquement?")
 if __name__ == "__main__":
     bot.run(token)
