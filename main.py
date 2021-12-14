@@ -117,12 +117,6 @@ class random_sealed_booster_generator():
         return booster
 
 
-@bot.event
-async def on_ready():
-    channel = bot.get_channel(channel_id)
-    channel.send('hello')
-
-
 @bot.command()
 async def dndmonster(ctx, *nom_monstre):
     monster_name = '-'.join(nom_monstre).lower()
@@ -247,11 +241,14 @@ async def sealed(ctx, *args):
 
 @bot.command()
 async def calendrier(ctx):
+    # should be a env variable
+    botUser = bot.get_user(867888646161563648)
     author = ctx.author
     guild = ctx.guild
     overwrites = {
         guild.default_role: discord.PermissionOverwrite(read_messages=False),
-        author: discord.PermissionOverwrite(read_messages=True)
+        author: discord.PermissionOverwrite(read_messages=True),
+        botUser: discord.PermissionOverwrite(read_messages=True)
     }
     channel = await guild.create_text_channel('Nouvelle séance', overwrites=overwrites)
     await channel.send('Première étape')
