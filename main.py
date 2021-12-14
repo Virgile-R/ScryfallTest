@@ -254,7 +254,7 @@ async def calendrier(ctx):
         author: discord.PermissionOverwrite(read_messages=True)
     }
     channel = await guild.create_text_channel('Nouvelle séance', overwrites=overwrites)
-    channel.send('Première étape')
+    await channel.send('Première étape')
 
 
 if __name__ == "__main__":
