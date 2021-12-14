@@ -245,6 +245,7 @@ async def calendrier(ctx):
     botUser = bot.get_user(867888646161563648)
     author = ctx.author
     guild = ctx.guild
+    originChannel = ctx.channel
     overwrites = {
         guild.default_role: discord.PermissionOverwrite(read_messages=False),
         author: discord.PermissionOverwrite(read_messages=True),
@@ -255,8 +256,38 @@ async def calendrier(ctx):
 
     msg = await bot.wait_for('message')
     msgFormat = msg.content.split(' ')
-    await channel.send(f'Voici les dates que tu as choisi: {[date for date in msgFormat]}')
+    await channel.send(f'Voici les dates que tu as choisi: {", ".join(msgFormat)}. Si tu veux ajouter des utilisateurs à mentionner pour le sondage, réagis à ce message avec un ✅. Si tu as fini, réagis avec un ❌')
 
+    def check(reaction):
+        return str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌"
+
+    reaction = await bot.wait_for('reaction_add', check=check)
+    finalMessage = ""
+    dateListWithIndex = [(i+1, msgFormat[i]) for i in range(len(msgFormat))]
+    if reaction == "❌":
+        finalMessage = f'Voici les dates proposées pour les prochaines parties: {", ".join("%s: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
+        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:')
+        await channel.send(finalMessage)
+        await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
+
+        finalReaction = await bot.wait_for('reaction_add', check=check)
+        if finalReaction == "✅":
+            await originChannel.send(finalMessage)
+            await channel.send('Ce channel va maintenant s\'autodétruire. A plus.')
+            await channel.delete()
+    elif reaction == "✅":
+        await channel.send('donne moi les pseudos des gens que tu veux pinger!')
+        nameList = await bot.wait_for('message')
+        finalMessage = f'Hey {", ".join("@%s" % name for name in nameList)}, Voici les dates proposées pour les prochaines parties: {", ".join("%s: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
+        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:')
+        await channel.send(finalMessage)
+        await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
+
+        finalReaction = await bot.wait_for('reaction_add', check=check)
+        if finalReaction == "✅":
+            await originChannel.send(finalMessage)
+            await channel.send('Ce channel va maintenant s\'autodétruire. A plus.')
+            await channel.delete()
 
 if __name__ == "__main__":
     bot.run(token)
