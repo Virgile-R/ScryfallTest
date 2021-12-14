@@ -259,6 +259,7 @@ async def calendrier(ctx):
     await channel.send(f'Voici les dates que tu as choisi: {", ".join(msgFormat)}. Si tu veux ajouter des utilisateurs à mentionner pour le sondage, réagis à ce message avec un ✅. Si tu as fini, réagis avec un ❌')
 
     def check(reaction, user):
+        # the emojis needs to be unicode I guess?
         return str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌"
 
     reaction = await bot.wait_for('reaction_add', check=check)
