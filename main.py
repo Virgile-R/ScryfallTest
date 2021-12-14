@@ -245,7 +245,7 @@ async def sealed(ctx, *args):
         await ctx.send("https://media.giphy.com/media/oS8pRFxbD0d44/giphy.gif")
 
 
-@bot.command
+@bot.command()
 async def calendrier(ctx):
     author = ctx.author
     guild = ctx.guild
