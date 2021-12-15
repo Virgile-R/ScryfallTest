@@ -13,10 +13,13 @@ from discord import Client
 import random
 import numpy as np
 from dnd import generate_monster_block, Monster
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 bot = commands.Bot(command_prefix="!")
-client = Client()
+
+intents = discord.Intents.default()
+intents.members = True
+client = Client(intents=intents)
 token = os.getenv("DISCORD_TOKEN")
 channel_id = os.getenv("CHANNEL_ID")
 
@@ -242,60 +245,88 @@ async def sealed(ctx, *args):
         await ctx.send("https://media.giphy.com/media/oS8pRFxbD0d44/giphy.gif")
 
 
+# TODO: Slash command et ping les users. Compteur de voix automatique et Durée du sondage
 @bot.command()
 async def calendrier(ctx):
-    # should be a env variable
-    botUser = bot.get_user(867888646161563648)
+
+    botUser = bot.user
     author = ctx.author
-    print(author)
+
     guild = ctx.guild
-    print(guild)
+
     originChannel = ctx.channel
     overwrites = {
         guild.default_role: discord.PermissionOverwrite(read_messages=False),
         author: discord.PermissionOverwrite(read_messages=True),
         botUser: discord.PermissionOverwrite(read_messages=True)
     }
-    channel = await guild.create_text_channel('Nouvelle séance', overwrites=overwrites)
-    await channel.send('Première étape: toi seul peut voir ce channel. Pour commencer donne moi au moins deux dates. tu peux aussi spécifier des utilisateurs que je pingerai.')
+    channel = await guild.create_text_channel(f'Nouvelle séance pour {originChannel}', overwrites=overwrites)
+    await channel.send('Première étape: toi seul peut voir ce channel. Pour commencer donne moi entre deux et cinq dates. tu peux aussi spécifier des utilisateurs que je pingerai.')
 
-    msg = await bot.wait_for('message')
-    print(msg)
+    def checkDate(msg):
+        return msg.author == author and len(msg.content.split()) > 1 and len(msg.content.split()) <= 5
+
+    msg = await bot.wait_for('message', check=checkDate)
+
     msgFormat = msg.content.split(' ')
     await channel.send(f'Voici les dates que tu as choisi: {", ".join(msgFormat)}. Si tu veux ajouter des utilisateurs à mentionner pour le sondage, réagis à ce message avec un ✅. Si tu as fini, réagis avec un ❌')
 
-    def check(reaction, msg):
-        # the emojis needs to be unicode I guess?
+    def checkReaction(reaction, msg):
+        return msg == author and str(reaction) in ["✅", "❌"]
 
-        return msg.author.name + "#" + msg.author.discriminator == author and (str(reaction[0].emoji) in ["✅", "❌"])
-
-    reaction = await bot.wait_for('reaction_add', check=check)
+    reaction = await bot.wait_for('reaction_add', check=checkReaction)
     finalMessage = ""
-    dateListWithIndex = [(i+1, msgFormat[i]) for i in range(len(msgFormat))]
-    if str(reaction[0].emoji) == "❌":
-        finalMessage = f'Voici les dates proposées pour les prochaines parties: {", ".join(":%s:: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
-        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:\n {finalMessage}\nSi cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
-        # await channel.send(finalMessage)
-        # await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
 
-        finalReaction = await bot.wait_for('reaction_add', check=check)
+    # Fonction pour changer un int vers un emoji
+    def emojyzeNumber(x):
+        match x:
+            case 1:
+                return "1️⃣"
+            case 2:
+                return "2️⃣"
+            case 3:
+                return "3️⃣"
+            case 4:
+                return "4️⃣"
+            case 5:
+                return "5️⃣"
+
+    dateListWithIndex = [(emojyzeNumber(i+1), msgFormat[i])
+                         for i in range(len(msgFormat))]
+    dateListWithIndexAndEmojis = "\n".join(
+        "%s: %s" % tup for tup in dateListWithIndex)
+    if str(reaction[0].emoji) == "❌":
+
+        finalMessage = f'Voici les dates proposées pour les prochaines parties: \n{dateListWithIndexAndEmojis}\nVotez en utilisant les emojis numériques!'
+        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:\n```{finalMessage}```\nSi cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
+
+        finalReaction = await bot.wait_for('reaction_add', check=checkReaction)
         if str(finalReaction[0].emoji) == "✅":
-            await originChannel.send(finalMessage)
+            await originChannel.send(f'```{finalMessage}```')
             await channel.send('Ce channel va maintenant s\'autodétruire. A plus.')
+            time.sleep(15)
+            await channel.delete()
+        else:
+            await channel.send('Opération annulée. Tu peux recommencer en tapant !calendrier dans le channel que tu veux. Ce channel va maintenant s\'autodétruire. A plus.')
+            time.sleep(15)
             await channel.delete()
     elif str(reaction[0]) == "✅":
         await channel.send('donne moi les pseudos des gens que tu veux pinger!')
         nameList = await bot.wait_for('message')
         nameListFormat = nameList.content.split()
-        finalMessage = f'Hey {", ".join("@%s" % name for name in nameListFormat)}, Voici les dates proposées pour les prochaines parties: {", ".join(":%s:: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
-        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:\n {finalMessage}\nSi cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
-        # await channel.send(finalMessage)
-        # await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
 
-        finalReaction = await bot.wait_for('reaction_add')
+        # il faudrait un component selector mais je ne le trouve pas dans la doc de Discord Py...
+        finalMessage = f'Hey {", ".join("@%s" % name for name in nameListFormat)}, Voici les dates proposées pour les prochaines parties: \n{dateListWithIndexAndEmojis}\nVotez en utilisant les emojis numériques!'
+        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:\n```{finalMessage}```\nSi cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
+
+        finalReaction = await bot.wait_for('reaction_add', check=checkReaction)
         if str(finalReaction[0].emoji) == "✅":
-            await originChannel.send(finalMessage)
+            await originChannel.send(f'```{finalMessage}```')
             await channel.send('Ce channel va maintenant s\'autodétruire. A plus.')
+            time.sleep(15)
+            await channel.delete()
+        else:
+            await channel.send('Opération annulée. Tu peux recommencer en tapant !calendrier dans le channel que tu veux. Ce channel va maintenant s\'autodétruire. A plus.')
             time.sleep(15)
             await channel.delete()
 
