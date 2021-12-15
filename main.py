@@ -13,8 +13,8 @@ from discord import Client
 import random
 import numpy as np
 from dnd import generate_monster_block, Monster
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 bot = commands.Bot(command_prefix="!")
 client = Client()
 token = os.getenv("DISCORD_TOKEN")
