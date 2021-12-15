@@ -258,25 +258,25 @@ async def calendrier(ctx):
     msgFormat = msg.content.split(' ')
     await channel.send(f'Voici les dates que tu as choisi: {", ".join(msgFormat)}. Si tu veux ajouter des utilisateurs à mentionner pour le sondage, réagis à ce message avec un ✅. Si tu as fini, réagis avec un ❌')
 
-    # def check(reaction, user):
-    #     # the emojis needs to be unicode I guess?
-    #     return str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌"
+    def check(reaction, msg):
+        # the emojis needs to be unicode I guess?
+        return msg.author == author and (str(reaction.emoji) in ["✅", "❌"])
 
     reaction = await bot.wait_for('reaction_add')
     finalMessage = ""
     dateListWithIndex = [(i+1, msgFormat[i]) for i in range(len(msgFormat))]
-    if reaction == "❌":
+    if str(reaction.emoji) == "❌":
         finalMessage = f'Voici les dates proposées pour les prochaines parties: {", ".join("%s: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
         await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:')
         await channel.send(finalMessage)
         await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
 
         finalReaction = await bot.wait_for('reaction_add')
-        if finalReaction == "✅":
+        if str(finalReaction.emoji) == "✅":
             await originChannel.send(finalMessage)
             await channel.send('Ce channel va maintenant s\'autodétruire. A plus.')
             await channel.delete()
-    elif reaction == "✅":
+    elif str(reaction.emoji) == "✅":
         await channel.send('donne moi les pseudos des gens que tu veux pinger!')
         nameList = await bot.wait_for('message')
         finalMessage = f'Hey {", ".join("@%s" % name for name in nameList)}, Voici les dates proposées pour les prochaines parties: {", ".join("%s: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
@@ -285,7 +285,7 @@ async def calendrier(ctx):
         await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
 
         finalReaction = await bot.wait_for('reaction_add')
-        if finalReaction == "✅":
+        if str(finalReaction.emoji) == "✅":
             await originChannel.send(finalMessage)
             await channel.send('Ce channel va maintenant s\'autodétruire. A plus.')
             await channel.delete()
