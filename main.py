@@ -13,6 +13,8 @@ from discord import Client
 import random
 import numpy as np
 from dnd import generate_monster_block, Monster
+from dotenv import load_dotenv
+load_dotenv()
 bot = commands.Bot(command_prefix="!")
 client = Client()
 token = os.getenv("DISCORD_TOKEN")
@@ -245,7 +247,9 @@ async def calendrier(ctx):
     # should be a env variable
     botUser = bot.get_user(867888646161563648)
     author = ctx.author
+    print(author)
     guild = ctx.guild
+    print(guild)
     originChannel = ctx.channel
     overwrites = {
         guild.default_role: discord.PermissionOverwrite(read_messages=False),
@@ -256,11 +260,13 @@ async def calendrier(ctx):
     await channel.send('Première étape: toi seul peut voir ce channel. Pour commencer donne moi au moins deux dates. tu peux aussi spécifier des utilisateurs que je pingerai.')
 
     msg = await bot.wait_for('message')
+    print(msg)
     msgFormat = msg.content.split(' ')
     await channel.send(f'Voici les dates que tu as choisi: {", ".join(msgFormat)}. Si tu veux ajouter des utilisateurs à mentionner pour le sondage, réagis à ce message avec un ✅. Si tu as fini, réagis avec un ❌')
 
     def check(reaction, msg):
         # the emojis needs to be unicode I guess?
+
         return msg.author == author and (str(reaction[0].emoji) in ["✅", "❌"])
 
     reaction = await bot.wait_for('reaction_add', check=check)
@@ -268,9 +274,9 @@ async def calendrier(ctx):
     dateListWithIndex = [(i+1, msgFormat[i]) for i in range(len(msgFormat))]
     if str(reaction[0].emoji) == "❌":
         finalMessage = f'Voici les dates proposées pour les prochaines parties: {", ".join(":%s:: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
-        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:')
-        await channel.send(finalMessage)
-        await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
+        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:\n {finalMessage}\nSi cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
+        # await channel.send(finalMessage)
+        # await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
 
         finalReaction = await bot.wait_for('reaction_add', check=check)
         if str(finalReaction[0].emoji) == "✅":
