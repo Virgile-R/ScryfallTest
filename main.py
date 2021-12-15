@@ -264,10 +264,10 @@ async def calendrier(ctx):
     msgFormat = msg.content.split(' ')
     await channel.send(f'Voici les dates que tu as choisi: {", ".join(msgFormat)}. Si tu veux ajouter des utilisateurs à mentionner pour le sondage, réagis à ce message avec un ✅. Si tu as fini, réagis avec un ❌')
 
-    def check(reaction):
+    def check(reaction, msg):
         # the emojis needs to be unicode I guess?
 
-        return str(reaction[0].emoji) in ["✅", "❌"]
+        return msg.author.name + "#" + msg.author.discriminator == author and (str(reaction[0].emoji) in ["✅", "❌"])
 
     reaction = await bot.wait_for('reaction_add', check=check)
     finalMessage = ""
