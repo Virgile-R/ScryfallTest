@@ -3,6 +3,7 @@ import subprocess
 import sys
 import discord
 import json
+import time
 from discord.message import Message
 import requests
 from bs4 import BeautifulSoup
@@ -258,22 +259,20 @@ async def calendrier(ctx):
     msgFormat = msg.content.split(' ')
     await channel.send(f'Voici les dates que tu as choisi: {", ".join(msgFormat)}. Si tu veux ajouter des utilisateurs à mentionner pour le sondage, réagis à ce message avec un ✅. Si tu as fini, réagis avec un ❌')
 
-    reaction = await bot.wait_for('reaction_add')
-    print(reaction[0].emoji)
-
     def check(reaction, msg):
         # the emojis needs to be unicode I guess?
         return msg.author == author and (str(reaction[0].emoji) in ["✅", "❌"])
 
+    reaction = await bot.wait_for('reaction_add', check=check)
     finalMessage = ""
     dateListWithIndex = [(i+1, msgFormat[i]) for i in range(len(msgFormat))]
     if str(reaction[0].emoji) == "❌":
-        finalMessage = f'Voici les dates proposées pour les prochaines parties: {", ".join("%s: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
+        finalMessage = f'Voici les dates proposées pour les prochaines parties: {", ".join(":%s:: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
         await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:')
         await channel.send(finalMessage)
         await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
 
-        finalReaction = await bot.wait_for('reaction_add')
+        finalReaction = await bot.wait_for('reaction_add', check=check)
         if str(finalReaction[0].emoji) == "✅":
             await originChannel.send(finalMessage)
             await channel.send('Ce channel va maintenant s\'autodétruire. A plus.')
@@ -281,17 +280,18 @@ async def calendrier(ctx):
     elif str(reaction[0]) == "✅":
         await channel.send('donne moi les pseudos des gens que tu veux pinger!')
         nameList = await bot.wait_for('message')
-        finalMessage = f'Hey {", ".join("@%s" % name for name in nameList)}, Voici les dates proposées pour les prochaines parties: {", ".join("%s: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
-        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:')
-        await channel.send(finalMessage)
-        await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
+        nameListFormat = nameList.content.split()
+        finalMessage = f'Hey {", ".join("@%s" % name for name in nameListFormat)}, Voici les dates proposées pour les prochaines parties: {", ".join(":%s:: %s" % tup for tup in dateListWithIndex)}. Votez en utilisant les emojis numériques!'
+        await channel.send(f'Ok, je vais envoyer le sondage suivant sur le channel {originChannel.name}:\n {finalMessage}\nSi cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
+        # await channel.send(finalMessage)
+        # await channel.send('Si cela te convient, confirme avec un emoji ✅ pour envoyer le message. Sinon tu peux annuler la création en réagissant avec un ❌')
 
         finalReaction = await bot.wait_for('reaction_add')
         if str(finalReaction[0].emoji) == "✅":
             await originChannel.send(finalMessage)
             await channel.send('Ce channel va maintenant s\'autodétruire. A plus.')
+            time.sleep(15)
             await channel.delete()
-    else:
-        await channel.send("Si je vois ce message les emojis sont en cause logiquement?")
+
 if __name__ == "__main__":
     bot.run(token)
