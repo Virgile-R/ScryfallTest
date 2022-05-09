@@ -261,14 +261,14 @@ async def calendrier(ctx):
         botUser: discord.PermissionOverwrite(read_messages=True)
     }
     channel = await guild.create_text_channel(f'Nouvelle séance pour {originChannel}', overwrites=overwrites)
-    await channel.send('Première étape: toi seul peut voir ce channel. Pour commencer donne moi entre deux et cinq dates. tu peux aussi spécifier des utilisateurs que je pingerai.')
+    await channel.send('Première étape: toi seul peut voir ce channel. Pour commencer donne moi entre deux et cinq dates, séparées par des virgules. tu peux aussi spécifier des utilisateurs que je pingerai.')
 
     def checkDate(msg):
         return msg.author == author and len(msg.content.split()) > 1 and len(msg.content.split()) <= 5
 
     msg = await bot.wait_for('message', check=checkDate)
 
-    msgFormat = msg.content.split(' ')
+    msgFormat = msg.content.split(',')
     await channel.send(f'Voici les dates que tu as choisi: {", ".join(msgFormat)}. Si tu veux ajouter des utilisateurs à mentionner pour le sondage, réagis à ce message avec un ✅. Si tu as fini, réagis avec un ❌')
 
     def checkReaction(reaction, msg):

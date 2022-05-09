@@ -23,7 +23,8 @@ class Monster:
             self.name = data['name']
             self.size = data['size']
             self.type = data['type']
-            self.subtype = data['subtype']
+            if 'subtype' in data:
+                self.subtype = data['subtype']
             self.alignment = data['alignment']
             self.ac = data['armor_class']
             self.hp = data['hit_points']
